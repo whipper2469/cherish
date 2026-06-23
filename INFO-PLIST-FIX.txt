@@ -1,0 +1,41 @@
+# FIX FOR EMPTY INFO.PLIST DISPLAY IN XCODE
+
+## The Problem:
+Your Info.plist shows "(0 items)" in Xcode's Property List editor, but actually contains all your permissions.
+
+## The Solution:
+
+### Option 1: Set Info.plist Path in Build Settings (Recommended)
+
+1. Click on **Tender** (blue icon at top of navigator)
+2. Select **Tender** target
+3. Go to **Build Settings** tab
+4. Search for: **"Info.plist File"**
+5. Double-click the value
+6. Set to: **Tender/Info.plist**
+7. Clean and rebuild: Product → Clean Build Folder (Shift+Cmd+K)
+8. Build again: Cmd+B
+
+### Option 2: View as Source Code
+
+1. Right-click **Info.plist** in navigator
+2. Select **"Open As" → "Source Code"**
+3. You'll see all the XML content with your permissions
+4. This confirms the file has content
+
+### Option 3: Re-add Info.plist to Target
+
+1. Select **Info.plist** in navigator
+2. Open **File Inspector** (right sidebar, first tab)
+3. Under **Target Membership**, make sure **Tender** is checked
+4. Clean and rebuild
+
+## Verify It Worked:
+
+After applying the fix, your Info.plist should show all entries:
+- Privacy - Microphone Usage Description ✓
+- Privacy - Photo Library Usage Description ✓
+- Privacy - Speech Recognition Usage Description ✓
+- Privacy - Location When In Use Usage Description ✓
+
+The file IS working correctly (your permissions are there), it's just a display issue in Xcode!

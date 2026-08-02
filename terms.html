@@ -211,6 +211,37 @@ nav.mo-scrolled{ box-shadow:0 6px 26px rgba(44,44,44,.10); }
 }
 </style>
 <script>document.documentElement.classList.add('js');</script>
+<style>
+/* ===== CLAYBIRD LABS BADGE — back-link to the studio site ===== */
+.cb-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:7px 14px; border-radius:999px;
+  border:1px solid rgba(180,83,47,.30);
+  background:rgba(247,229,217,.55);
+  color:#8C3F22; font-weight:650; font-size:.84rem;
+  text-decoration:none; white-space:nowrap; line-height:1;
+  transition:background .25s ease, border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+.cb-badge:hover{
+  background:#F7E5D9; border-color:#E0906A;
+  transform:translateY(-1px); box-shadow:0 8px 20px rgba(180,83,47,.18);
+}
+.cb-badge svg{ width:18px; height:18px; flex:none; transition:transform .35s ease; }
+.cb-badge:hover svg{ transform:translateX(-3px) rotate(-8deg); }
+.cb-foot{
+  display:inline-flex; align-items:center; gap:9px; margin-top:14px;
+  text-decoration:none; color:inherit; font-size:.9rem; font-weight:600; opacity:.85;
+  transition:opacity .25s ease;
+}
+.cb-foot:hover{ opacity:1; }
+.cb-foot svg{ width:20px; height:20px; flex:none; transition:transform .35s ease; }
+.cb-foot:hover svg{ transform:translateX(-3px) rotate(-8deg); }
+@media (max-width:760px){ .cb-badge span.cb-long{ display:none; } }
+@media (prefers-reduced-motion:reduce){
+  .cb-badge:hover{ transform:none; }
+  .cb-badge:hover svg, .cb-foot:hover svg{ transform:none; }
+}
+</style>
 </head>
 <body>
     <nav>
@@ -221,6 +252,7 @@ nav.mo-scrolled{ box-shadow:0 6px 26px rgba(44,44,44,.10); }
                 <li><a href="privacy.html">Privacy</a></li>
                 <li><a href="terms.html">Terms</a></li>
                 <li><a href="support.html">Support</a></li>
+                <li><a class="cb-badge" href="https://claybirdlabs.com" aria-label="Back to Claybird Labs"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M48,30.6 L60.5,32.8 L48,34.4 Z" fill="#8C3F22"/><path d="M54,32.5 C51.5,30 45,28.5 38,29.5 C27,31 18,36 14,44 C10,49 6,53 2,59 C12,54 20,50 26,46 C32,44 40,41 46,38.5 C50.5,37.2 54,35 54,32.5 Z" fill="#B4532F"/><path d="M29,33 C25,25 23,14 25,5 C33,11 39,20 41,30 C37,34 32,35 29,33 Z" fill="#E0906A"/><circle cx="45" cy="32.2" r="1.5" fill="#FDF8F4"/></svg> Claybird Labs</a></li>
             </ul>
         </div>
     </nav>
@@ -383,11 +415,12 @@ nav.mo-scrolled{ box-shadow:0 6px 26px rgba(44,44,44,.10); }
     </div>
 
     <footer>
-        <p>&copy; 2025 Cherish. All rights reserved. | 
+        <p>&copy; 2026 Cherish. All rights reserved. | 
         <a href="index.html">Home</a> | 
         <a href="privacy.html">Privacy</a> | 
         <a href="terms.html">Terms</a> | 
         <a href="support.html">Support</a></p>
+        <p><a class="cb-foot" href="https://claybirdlabs.com"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M48,30.6 L60.5,32.8 L48,34.4 Z" fill="#8C3F22"/><path d="M54,32.5 C51.5,30 45,28.5 38,29.5 C27,31 18,36 14,44 C10,49 6,53 2,59 C12,54 20,50 26,46 C32,44 40,41 46,38.5 C50.5,37.2 54,35 54,32.5 Z" fill="#B4532F"/><path d="M29,33 C25,25 23,14 25,5 C33,11 39,20 41,30 C37,34 32,35 29,33 Z" fill="#E0906A"/><circle cx="45" cy="32.2" r="1.5" fill="#FDF8F4"/></svg> A Claybird Labs app</a></p>
     </footer>
 <script>
 /* Motion layer — reveals on scroll, nav progress. Degrades to static without JS. */

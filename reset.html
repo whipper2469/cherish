@@ -180,9 +180,24 @@
         // Implicit flow puts the tokens straight in the URL fragment, so a link
         // requested here still works if it's opened in a different browser.
         // PKCE would tie it to whichever browser asked.
+        //
+        // persistSession is off on purpose. A recovery session grants the
+        // right to change that account's password, and storing it meant the
+        // next person to open this page on the same browser landed straight in
+        // "choose a new password" for whoever reset last — no link required.
+        // In-memory only: it dies with the tab.
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-            auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true },
+            auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: false },
         });
+
+        // Clear anything a previous version of this page left behind.
+        try {
+            Object.keys(localStorage)
+                .filter((k) => k.startsWith('sb-'))
+                .forEach((k) => localStorage.removeItem(k));
+        } catch (_) {
+            // Storage blocked — nothing to clean up in that case.
+        }
 
         const show = (id) => {
             document.querySelectorAll('section').forEach((s) => s.classList.remove('active'));
@@ -201,10 +216,21 @@
         const query = new URLSearchParams(window.location.search);
         const linkError = fragment.get('error_description') || query.get('error_description');
 
+        // Only a load that actually carried a recovery link may show the
+        // password form. Asking "is there a session?" was the bug: a leftover
+        // session from an earlier reset answered yes.
+        const arrivedWithRecoveryLink =
+            fragment.has('access_token') || fragment.has('refresh_token') || query.has('code');
+
         async function start() {
             if (linkError) {
                 show('request');
                 say('requestMsg', `${linkError}. Request a new link below.`);
+                return;
+            }
+
+            if (!arrivedWithRecoveryLink) {
+                show('request');
                 return;
             }
 

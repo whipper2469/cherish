@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - Cherish</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c0715a;
+            --primary-dark: #a65d48;
+            --secondary: #f4e8e1;
+            --text: #2c2c2c;
+            --text-light: #6a6a6a;
+            --bg: #fdfbf9;
+            --card-bg: #ffffff;
+            --danger: #b3423a;
+            --success: #3f7d54;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.25rem;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(192, 113, 90, 0.15);
+            border-radius: 18px;
+            padding: 2.25rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 10px 40px rgba(44, 44, 44, 0.06);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.65rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.sub { color: var(--text-light); font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            font-family: inherit;
+            font-size: 1rem;
+            border: 1px solid rgba(44, 44, 44, 0.15);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--text);
+            margin-bottom: 1.1rem;
+        }
+
+        input:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+        button {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: var(--primary);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        button:hover { background: var(--primary-dark); }
+        button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+        .msg {
+            margin-top: 1.1rem;
+            font-size: 0.92rem;
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .msg.error { display: block; color: var(--danger); background: rgba(179, 66, 58, 0.08); }
+        .msg.ok { display: block; color: var(--success); background: rgba(63, 125, 84, 0.08); }
+
+        .hint { font-size: 0.85rem; color: var(--text-light); margin-top: 1.25rem; }
+        .hint a { color: var(--primary); }
+
+        .app-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        section { display: none; }
+        section.active { display: block; }
+    </style>
+</head>
+<body>
+    <a href="/" class="logo">Cherish</a>
+
+    <div class="card">
+        <!-- Shown while the recovery link in the URL is being checked. -->
+        <section id="loading" class="active">
+            <h1>One moment…</h1>
+            <p class="sub">Checking your reset link.</p>
+        </section>
+
+        <!-- No link yet: request one from this browser. -->
+        <section id="request">
+            <h1>Reset your password</h1>
+            <p class="sub">Enter the email you use for Cherish and we'll send you a link. Open it in this same browser and you can set a new password right here.</p>
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+            <button id="send">Send reset link</button>
+            <div id="requestMsg" class="msg"></div>
+            <p class="hint">On your iPhone with Cherish installed? Opening the emailed link there takes you straight into the app instead.</p>
+        </section>
+
+        <!-- Recovery link accepted: choose a new password. -->
+        <section id="update">
+            <h1>Choose a new password</h1>
+            <p class="sub">At least 8 characters. You'll use this the next time you sign in to Cherish.</p>
+            <label for="password">New password</label>
+            <input id="password" type="password" autocomplete="new-password" placeholder="••••••••">
+            <label for="confirm">Confirm password</label>
+            <input id="confirm" type="password" autocomplete="new-password" placeholder="••••••••">
+            <button id="save">Save new password</button>
+            <div id="updateMsg" class="msg"></div>
+        </section>
+
+        <!-- Done. -->
+        <section id="done">
+            <h1>Password changed</h1>
+            <p class="sub">You can sign in to Cherish with your new password now.</p>
+            <a class="app-link" href="tender://">Open Cherish &rarr;</a>
+        </section>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        // Publishable key: safe in a browser. Row-level security is what
+        // protects the data, not this string.
+        const SUPABASE_URL = 'https://bawarowdyiqljwczqrkm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_PHaSvJ4r5PYu-PSNQKTmMA_FkokEw5I';
+        const REDIRECT_TO = 'https://cherishtlc.life/reset.html';
+
+        // Implicit flow puts the tokens straight in the URL fragment, so a link
+        // requested here still works if it's opened in a different browser.
+        // PKCE would tie it to whichever browser asked.
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+            auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true },
+        });
+
+        const show = (id) => {
+            document.querySelectorAll('section').forEach((s) => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        };
+
+        const say = (id, text, ok = false) => {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.className = `msg ${ok ? 'ok' : 'error'}`;
+        };
+
+        // An expired or already-used link comes back as an error in the
+        // fragment rather than as tokens.
+        const fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+        const query = new URLSearchParams(window.location.search);
+        const linkError = fragment.get('error_description') || query.get('error_description');
+
+        async function start() {
+            if (linkError) {
+                show('request');
+                say('requestMsg', `${linkError}. Request a new link below.`);
+                return;
+            }
+
+            // detectSessionInUrl consumes the fragment; give it a moment.
+            const { data } = await supabase.auth.getSession();
+            if (data.session) {
+                show('update');
+                return;
+            }
+
+            // App-initiated links use PKCE and carry ?code= — that can only be
+            // exchanged by the device that asked for it.
+            const code = query.get('code');
+            if (code) {
+                const { error } = await supabase.auth.exchangeCodeForSession(code);
+                if (!error) {
+                    show('update');
+                    return;
+                }
+                show('request');
+                say('requestMsg', 'That link was created by the Cherish app, so it only opens on your iPhone. Request a new one below to reset in this browser.');
+                return;
+            }
+
+            show('request');
+        }
+
+        document.getElementById('send').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            const button = document.getElementById('send');
+            if (!email) {
+                say('requestMsg', 'Enter your email first.');
+                return;
+            }
+            button.disabled = true;
+            const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: REDIRECT_TO });
+            button.disabled = false;
+            if (error) {
+                say('requestMsg', error.message);
+                return;
+            }
+            // Deliberately the same message whether or not the address has an
+            // account, so this page can't be used to find out who's registered.
+            say('requestMsg', "If that email has a Cherish account, a reset link is on its way. It expires in an hour.", true);
+        });
+
+        document.getElementById('save').addEventListener('click', async () => {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm').value;
+            const button = document.getElementById('save');
+
+            if (password.length < 8) {
+                say('updateMsg', 'Use at least 8 characters.');
+                return;
+            }
+            if (password !== confirm) {
+                say('updateMsg', "Those two don't match.");
+                return;
+            }
+
+            button.disabled = true;
+            const { error } = await supabase.auth.updateUser({ password });
+            button.disabled = false;
+
+            if (error) {
+                say('updateMsg', error.message);
+                return;
+            }
+            await supabase.auth.signOut();
+            show('done');
+        });
+
+        start();
+    </script>
+</body>
+</html>
